@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jonathan Reich — AI and Systems Engineer</title>
+<meta name="description" content="AI and systems engineer in Melbourne. Production machine learning across law, healthcare and insurance; a from-scratch LLM stack in C++ and CUDA; Mathlib contributor; independent research in mathematical biology, philosophy and machine learning.">
+<meta name="author" content="Jonathan Reich">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Jonathan Reich — AI and Systems Engineer">
+<meta property="og:description" content="Production ML, a from-scratch LLM stack in C++/CUDA, Mathlib contributions and independent research.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <nav class="wrap nav">
+    <a class="brand" href="index.html">Jonathan&nbsp;Reich</a>
+    <ul class="nav-links">
+      <li><a href="#systems">Systems</a></li>
+      <li><a href="#impact">Impact</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="poetry.html">Poetry</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle colour theme">
+      <span aria-hidden="true">◐</span>
+    </button>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ────────────── HERO ────────────── -->
+  <section class="hero wrap">
+    <p class="eyebrow">Melbourne, Australia</p>
+    <h1>AI and systems engineer<br><span class="muted">who builds the whole stack.</span></h1>
+    <p class="lede">
+      Senior AI Engineer, at Senior Manager grade, at Deloitte. More than eight
+      years shipping production machine learning across law,
+      healthcare and insurance, including the engine behind Amica, the national
+      online family-law settlement service. Outside work I have written an LLM
+      stack from scratch in C++ and CUDA: a trainer, an inference engine and a
+      research lab that turns arXiv papers into runnable experiments. I also
+      contribute to Mathlib and run an independent research programme.
+    </p>
+    <div class="cta-row">
+      <a class="btn primary" href="#systems">See the systems</a>
+      <a class="btn" href="research.html">Research and publications</a>
+    </div>
+  </section>
+
+  <!-- ────────────── SYSTEMS ────────────── -->
+  <section id="systems" class="wrap section">
+    <h2 class="section-title">From-scratch systems</h2>
+    <p class="section-lede">
+      An end-to-end LLM stack, train → export → serve → study, written as
+      separate implementations. Because the trainer and the engine were built
+      independently, argmax parity between them checks both sides.
+    </p>
+
+    <article class="card feature">
+      <div class="card-head">
+        <h3>paperkiln</h3>
+        <span class="tag">C++ · CUDA · Python</span>
+      </div>
+      <p>
+        A self-contained ML research lab. Paste an arXiv link and it fetches the
+        paper's LaTeX, extracts the architecture with an <strong>evidence snippet
+        for every value</strong>, trains that exact model, exports it to GGUF, and
+        lets you chat with it, all in one browser tab.
+      </p>
+      <p>
+        Underneath: a from-scratch autograd engine over hand-written CPU and CUDA
+        kernels (the raw CUDA runtime API, no cuBLAS), LoRA/QLoRA, blockwise
+        quantisation, and GGUF/safetensors export. The core engine is under 4,000
+        lines. Experiments are pre-registered with committed decision rules, and
+        the negative results are published next to the wins.
+      </p>
+      <ul class="links">
+        <li><a href="https://github.com/JohnnyTeutonic/paperkiln" rel="noopener">github.com/JohnnyTeutonic/paperkiln</a></li>
+      </ul>
+    </article>
+
+    <div class="grid">
+      <article class="card">
+        <div class="card-head">
+          <h3>coalfire.cpp</h3>
+          <span class="tag">Training · C++ / CUDA</span>
+        </div>
+        <p>
+          A transformer training engine in pure C++ and CUDA with no ML
+          frameworks. Custom kernels for fused softmax with cross-entropy, fused
+          attention, SwiGLU and MoE routing; FP16 mixed precision, gradient
+          accumulation, RoPE and GQA; resumable checkpoints; GGUF and safetensors
+          export. It trains small models to coherent multi-turn dialogue.
+        </p>
+        <ul class="links">
+          <li><a href="https://github.com/JohnnyTeutonic/coalfire.cpp" rel="noopener">coalfire.cpp</a></li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <h3>ember.cpp</h3>
+          <span class="tag">Inference · C++ / CUDA / WASM</span>
+        </div>
+        <p>
+          A cross-format LLM inference engine in pure C++ with an optional CUDA
+          backend. It loads Llama 2 and 3 from GGUF and safetensors, including
+          quantised types (Q4_K_M, Q6_K, Q8_0, Q8_K), with hand-written
+          speculative decoding, Python bindings, a built-in web server, and an
+          unmodified build to WebAssembly for in-browser inference.
+        </p>
+        <ul class="links">
+          <li><a href="https://github.com/JohnnyTeutonic/ember.cpp" rel="noopener">ember.cpp</a></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- ────────────── IMPACT ────────────── -->
+  <section id="impact" class="wrap section">
+    <h2 class="section-title">Production impact</h2>
+
+    <article class="card feature">
+      <div class="card-head">
+        <h3>Amica</h3>
+        <span class="tag">Legal AI · amica.gov.au</span>
+      </div>
+      <p>
+        A national, AI-assisted online service that helps separating couples
+        reach agreement on property without going to court. I modelled its
+        data-driven <strong>percentage-split engine</strong> and co-built the
+        cloud infrastructure. The family-law machine learning behind it supports
+        an estimated <strong>$80M in justice-system savings</strong>. iAwards
+        winner, 2020.
+      </p>
+      <p class="note">
+        Thomas, L., &amp; Reich, J. (2021). Empowerment by design: using
+        technology to enable better decision making. <em>Australian Society for
+        Computers &amp; Law Journal</em>, 93, 28–30.
+      </p>
+      <ul class="cites">
+        <li><span>ACM · ICAIL ’21</span><div>Zeleznikow &amp; Schmitz, <a href="https://www.researchgate.net/publication/353520578_Making_intelligent_online_dispute_resolution_tools_available_to_self-represented_litigants_in_the_public_justice_system_towards_and_ethical_use_of_the_ai_technology_in_the_administration_of_justice" rel="noopener">“Making intelligent online dispute resolution tools available to self-represented litigants in the public justice system”</a>, which examines Amica’s percentage-split engine.</div></li>
+        <li><span>VLRC · 2024</span><div>Victorian Law Reform Commission, <a href="https://www.lawreform.vic.gov.au/publication/artificial-intelligence-in-victorias-courts-and-tribunals-consultation-paper/4-ai-in-courts-and-tribunals/" rel="noopener"><em>Artificial Intelligence in Victoria’s Courts and Tribunals</em></a>, consultation paper, as a working model of online dispute resolution.</div></li>
+        <li><span>UNSW Law J. · 2025</span><div><a href="https://www.austlii.edu.au/cgi-bin/viewdoc/au/journals/UNSWLJ/2025/42.html" rel="noopener">UNSW Law Journal (2025)</a>, in comparative work on automated family-law systems.</div></li>
+        <li><span>U. Melbourne · 2025</span><div>Melbourne Centre for AI and Digital Ethics, <a href="https://www.unimelb.edu.au/__data/assets/pdf_file/0004/5349577/2025-Snapshot-AI-in-Law-Firms-CLCs-Govt-4-August.pdf" rel="noopener"><em>AI in the Law Snapshot</em></a> (2025), as a case study of AI in government legal services.</div></li>
+        <li><span>Dialnet</span><div>João &amp; Sarlet, “The use of technology in order to solve family law disputes and the ‘Amica’ service for online settlements aided by artificial intelligence”, which cites Thomas &amp; Reich (2021).</div></li>
+      </ul>
+    </article>
+
+    <div class="grid">
+      <article class="card">
+        <div class="card-head">
+          <h3>Healthcare</h3>
+          <span class="tag">2022–2025</span>
+        </div>
+        <p>
+          More than <strong>$15M in cost savings</strong> from production ML and
+          AI systems: a fine-tuned multimodal LLM with retrieval over medical
+          knowledge bases, OCR and NLP pipelines for large-scale medical
+          documents, and forecasting for workforce planning.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <h3>Document AI and agents</h3>
+          <span class="tag">Insurance · 2025–2026</span>
+        </div>
+        <p>
+          A production document-understanding system (Textract and LLM
+          extraction on AWS, served with vLLM, with confidence-scored human
+          review): <strong>778 of 782 fields correct</strong> across six form
+          types on held-out evaluation. Also a serverless agent runtime on
+          Bedrock AgentCore.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ────────────── OPEN SOURCE ────────────── -->
+  <section id="open-source" class="wrap section">
+    <h2 class="section-title">Mathlib</h2>
+    <article class="card feature">
+      <div class="card-head">
+        <h3>Lean 4 mathematical library</h3>
+        <span class="tag">10 merged pull requests</span>
+      </div>
+      <p>
+        Contributions to Mathlib in Lie theory, toward the
+        <strong>Killing–Cartan classification</strong>: the Cartan matrices of
+        the classical and exceptional types, their explicit forms, determinants,
+        and simply-laced and non-simply-laced properties. Seven of the ten merged
+        pull requests are in this series. The others include the
+        <strong>Lawvere fixed-point theorem</strong>. Every merged result is
+        checked by the Lean kernel and reviewed by the maintainers.
+      </p>
+      <ul class="links">
+        <li><a href="https://github.com/leanprover-community/mathlib4/pulls?q=is%3Apr+author%3AJohnnyTeutonic" rel="noopener">The pull requests</a></li>
+      </ul>
+    </article>
+  </section>
+
+  <!-- ────────────── RESEARCH ────────────── -->
+  <section id="writing" class="wrap section">
+    <h2 class="section-title">Research</h2>
+    <ul class="pubs">
+      <li>
+        <span class="pub-venue">Mathematical Biosciences</span>
+        <span class="pub-title">Transition-pair structure and near-extremal third-position transition robustness in the standard genetic code</span>
+        <span class="pub-status accent">Published 2026</span>
+      </li>
+      <li>
+        <span class="pub-venue">Aust. Soc. Computers &amp; Law J.</span>
+        <span class="pub-title">Empowerment by design: using technology to enable better decision making (with L. Thomas)</span>
+        <span class="pub-status accent">Published 2021</span>
+      </li>
+    </ul>
+    <p class="more">
+      <a href="research.html">Six more papers in review, across mathematical biology, philosophy, machine learning and film theory →</a>
+    </p>
+  </section>
+
+  <!-- ────────────── ABOUT ────────────── -->
+  <section id="about" class="wrap section narrow">
+    <h2 class="section-title">About</h2>
+    <p>
+      I hold an M.Sc. in Bioinformatics from the University of Melbourne (High
+      Distinction thesis), a B.Sc. from Monash, and a B.A. (Honours) from
+      Melbourne. My work moves between fields on purpose: methods that are
+      mature in one discipline often settle an open question in another.
+    </p>
+    <p>
+      I also write poetry, much of it experimental: poems built from protein
+      notation, corrupted memory records and device telemetry.
+      <a href="poetry.html">The list is here.</a>
+    </p>
+  </section>
+
+  <!-- ────────────── CONTACT ────────────── -->
+  <section id="contact" class="wrap section narrow">
+    <h2 class="section-title">Contact</h2>
+    <ul class="contact-list">
+      <li><span>Email</span><div><a href="mailto:jonathanreich100@gmail.com">jonathanreich100@gmail.com</a></div></li>
+      <li><span>GitHub</span><div><a href="https://github.com/JohnnyTeutonic" rel="noopener">github.com/JohnnyTeutonic</a></div></li>
+      <li><span>LinkedIn</span><div><a href="https://linkedin.com/in/jonathan-reich-6a6158135" rel="noopener">jonathan-reich-6a6158135</a></div></li>
+      <li><span>ORCID</span><div><a href="https://orcid.org/0009-0000-0108-0717" rel="noopener">0009-0000-0108-0717</a></div></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <p>© <span id="year">2026</span> Jonathan Reich · Melbourne, Australia</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
