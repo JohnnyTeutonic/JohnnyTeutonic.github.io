@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chat model — Jonathan Reich</title>
+<meta name="description" content="A chat model trained from scratch in a self-written C++/CUDA framework and served by a self-written inference engine. Talk to it, and see how it was made.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◆</text></svg>">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <nav class="wrap nav">
+    <a class="brand" href="index.html">Jonathan&nbsp;Reich</a>
+    <ul class="nav-links">
+      <li><a href="index.html#systems">Systems</a></li>
+      <li><a href="chat.html">Chat</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="poetry.html">Poetry</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle colour theme">
+      <span aria-hidden="true">◐</span>
+    </button>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="hero wrap">
+    <p class="eyebrow">Live demo</p>
+    <h1>A chat model,<br><span class="muted">built end to end.</span></h1>
+    <p class="lede">
+      Every stage of this model ran on code I wrote: the tokeniser, the training
+      framework and its GPU kernels, fine-tuning, evaluation, export, and the
+      inference engine answering you below. It is small (14.6 million
+      parameters) and trained only on conversation, so it is good at small talk
+      and knows no facts.
+    </p>
+    <div class="cta-row">
+      <a class="btn primary" href="#talk">Talk to it</a>
+      <a class="btn" href="#how">How it was made</a>
+    </div>
+  </section>
+
+  <section id="talk" class="wrap section">
+    <h2 class="section-title">Talk to it</h2>
+    <p class="section-lede">
+      It runs in your browser: ember.cpp is compiled to WebAssembly, the model
+      (71&nbsp;MB) downloads once, and nothing you type leaves your machine.
+    </p>
+    <div class="chat-frame">
+      <iframe src="https://johnnyteutonic-ember-chat.static.hf.space" title="ember chat" loading="lazy"></iframe>
+    </div>
+    <p class="field-note">
+      If the window stays blank, open it directly:
+      <a href="https://huggingface.co/spaces/johnnyteutonic/ember-chat" rel="noopener">huggingface.co/spaces/johnnyteutonic/ember-chat</a>.
+    </p>
+  </section>
+
+  <section id="how" class="wrap section">
+    <h2 class="section-title">How it was made</h2>
+
+    <div class="grid">
+      <article class="card">
+        <div class="card-head">
+          <h3>Model and tokeniser</h3>
+          <span class="tag">paperkiln</span>
+        </div>
+        <p>
+          A Llama-style decoder: 6 layers, width 384, 6 heads, rotary position
+          embeddings, SwiGLU and RMSNorm, 14.65M parameters and a 256-token
+          context. The byte-level BPE tokeniser (8,192 tokens, with chat role
+          markers) was trained with paperkiln's own BPE tool, and the trainer and
+          the engine share one implementation of it.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <h3>Pretraining</h3>
+          <span class="tag">C++ · CUDA</span>
+        </div>
+        <p>
+          12,000 steps on TinyChat dialogue (49M tokens) on a cloud L4 GPU;
+          validation loss fell from 3.72 to 1.99. During the run I moved
+          attention, rotary embeddings and the head plumbing onto the GPU, added
+          a caching allocator and kept activations resident on the device, which
+          cut a training step from 6.4 s to 1.8 s with the loss unchanged in
+          every same-sitting comparison. Training resumed across those builds
+          from checkpoints with optimiser state.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <h3>Post-training</h3>
+          <span class="tag">SFT · preference optimisation</span>
+        </div>
+        <p>
+          Supervised fine-tuning on 24,000 examples in the chat template, with
+          the loss masked to the reply. It overfits after about 500 steps, so
+          later runs stop there. A preference stage (DPO on self-play pairs) was
+          tried at three learning rates and <strong>not kept</strong>: it raised
+          pair accuracy while making replies drift off topic and repeat
+          themselves. The next preference stage ranks samples with a judge model
+          and has to pass a repetition gate first.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <h3>Evaluation</h3>
+          <span class="tag">frozen prompts</span>
+        </div>
+        <p>
+          On 100 frozen TinyChat prompts the model ends every reply cleanly and
+          never repeats itself; topicality and similarity to reference replies
+          rose with every extra pretraining step. On a 50-question probe of facts,
+          science and arithmetic it scores zero, as expected from its data: that
+          gap is what the next model, pretrained on general educational text,
+          is for.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <h3>Serving</h3>
+          <span class="tag">ember.cpp</span>
+        </div>
+        <p>
+          The trained weights are exported to GGUF and loaded by ember.cpp, an
+          inference engine written separately from the trainer. Greedy output
+          is checked token for token against the trainer's own sampler. On a
+          laptop GPU, decoding runs at 2.7 ms per token with each step replayed
+          as a captured CUDA graph, and streamed replies show their first word
+          in about 20 ms. Here the same engine runs as WebAssembly in your
+          browser, and gives the same greedy replies as the native build.
+        </p>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <h3>What comes next</h3>
+          <span class="tag">roadmap</span>
+        </div>
+        <p>
+          A larger model pretrained on FineWeb-Edu, for questions as well as
+          conversation; then training architectures that paperkiln extracts
+          from arXiv papers, evidence for every value, and comparing them on the
+          same chat benchmark.
+        </p>
+      </article>
+    </div>
+
+    <p class="field-note">
+      Code: <a href="https://github.com/JohnnyTeutonic/paperkiln" rel="noopener">paperkiln</a>
+      (training) and <a href="https://github.com/JohnnyTeutonic/ember.cpp" rel="noopener">ember.cpp</a>
+      (inference). Built with the help of AI coding assistants. Training data:
+      <a href="https://huggingface.co/datasets/starhopp3r/TinyChat" rel="noopener">TinyChat</a>
+      by starhopp3r, CC BY-NC 4.0, which the model inherits.
+    </p>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <p>© <span id="year">2026</span> Jonathan Reich · Melbourne, Australia</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

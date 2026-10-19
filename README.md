@@ -17,7 +17,9 @@ script.js       theme toggle and footer year (site works without it)
 **The username-site route (gives you `johnnyteutonic.github.io`):**
 
 1. Create a new public repository named exactly **`JohnnyTeutonic.github.io`**.
-2. Copy the contents of this folder into it (the files, not the folder itself).
+2. Copy the contents of this folder into it (the files, not the folder itself),
+   **except `.env`**: it holds the Hugging Face token for the ember chat Space.
+   `.gitignore` (copied too) keeps it out of commits as a second guard.
 3. `git add . && git commit -m "site" && git push`
 4. Wait a minute or two. It will be live at `https://johnnyteutonic.github.io`.
 

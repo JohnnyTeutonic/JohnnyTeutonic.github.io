@@ -1,0 +1,3 @@
+# Secrets live beside the site source but must never be deployed.
+.env
+*.env

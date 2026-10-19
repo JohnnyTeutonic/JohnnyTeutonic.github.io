@@ -299,3 +299,17 @@ html[data-theme="dark"] .btn.primary { color: #1a1207; }
 }
 
 ::selection { background: var(--accent); color: #fff; }
+
+/* Live chat embed (chat.html). */
+.chat-frame {
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-raised);
+}
+.chat-frame iframe {
+  display: block;
+  width: 100%;
+  height: 640px;
+  border: 0;
+}

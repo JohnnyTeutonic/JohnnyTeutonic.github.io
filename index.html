@@ -27,6 +27,7 @@
     <ul class="nav-links">
       <li><a href="#systems">Systems</a></li>
       <li><a href="#impact">Impact</a></li>
+      <li><a href="chat.html">Chat</a></li>
       <li><a href="research.html">Research</a></li>
       <li><a href="poetry.html">Poetry</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -80,13 +81,19 @@
       </p>
       <p>
         Underneath: a from-scratch autograd engine over hand-written CPU and CUDA
-        kernels (the raw CUDA runtime API, no cuBLAS), LoRA/QLoRA, blockwise
+        kernels (cuBLAS only for the large matrix multiplies), LoRA/QLoRA, blockwise
         quantisation, and GGUF/safetensors export. The core engine is under 4,000
         lines. Experiments are pre-registered with committed decision rules, and
         the negative results are published next to the wins.
       </p>
+      <p>
+        Its first chat model was trained, fine-tuned, evaluated and exported in
+        paperkiln and is served by ember.cpp. <a href="chat.html">Talk to it, and
+        see how it was made.</a>
+      </p>
       <ul class="links">
         <li><a href="https://github.com/JohnnyTeutonic/paperkiln" rel="noopener">github.com/JohnnyTeutonic/paperkiln</a></li>
+        <li><a href="chat.html">Live chat demo</a></li>
       </ul>
     </article>
 
